@@ -1,0 +1,48 @@
+#include <Arduino.h>
+
+const int rightMotorPin =  3;
+const int leftMotorPin =  4;
+int motorStateRight = LOW;
+int motorStateLeft = LOW;
+unsigned long previousMillisRight = 0;
+unsigned long previousMillisLeft = 0;
+int intervalRight = 1000;
+int intervalLeft = 1000;
+
+void setup() {
+  pinMode(rightMotorPin, OUTPUT);
+  pinMode(leftMotorPin, OUTPUT);
+}
+
+void loop() {
+
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillisRight >= intervalRight) {
+    previousMillisRight = currentMillis;
+
+    if (motorStateRight == LOW) {
+      motorStateRight = HIGH;
+      intervalRight = 1234;
+    } else {
+      motorStateRight = LOW;
+      intervalRight = 234;
+    }
+
+    digitalWrite(rightMotorPin, motorStateRight);
+  }
+
+  if (currentMillis - previousMillisLeft >= intervalLeft) {
+    previousMillisLeft = currentMillis;
+
+    if (motorStateLeft == LOW) {
+      motorStateLeft = HIGH;
+      intervalLeft = 321;
+    } else {
+      motorStateLeft = LOW;
+      intervalLeft = 1324;
+    }
+
+    digitalWrite(leftMotorPin, motorStateLeft);
+  }
+}

@@ -1,0 +1,44 @@
+#include <avr/sleep.h> //this AVR library contains the methods that controls the sleep modes
+#define interruptPin 2 //Pin we are going to use to wake up the Arduino
+unsigned long currentMillis = millis();
+unsigned long previousMillisSleep = 0;
+int intervalSleep = 1000;
+
+
+void setup() {
+  Serial.begin(9600);//Start Serial Comunication
+  pinMode(interruptPin, INPUT_PULLUP); //Set pin d2 to input using the buildin pullup resistor
+}
+
+void wakeUp() {
+  Serial.println("Interrrupt Fired");
+  sleep_disable();
+  detachInterrupt(0);
+}
+
+void Going_To_Sleep() {
+  sleep_enable();
+  attachInterrupt(0, wakeUp, LOW);//attaching a interrupt to pin d2
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  /*
+    SLEEP_MODE_EXT_STANDBY Extended Standby Mode.  ------> least
+    SLEEP_MODE_IDLE Idle mode.
+    SLEEP_MODE_PWR_DOWN Power Down Mode.
+    SLEEP_MODE_PWR_SAVE Power Save Mode.
+    SLEEP_MODE_STANDBY Standby Mode.
+  */
+  sleep_cpu();//activating sleep mode
+  Serial.println("just woke up!");//next line of code executed after the interrupt
+}
+
+void loop() {
+
+  currentMillis = millis();
+  if (currentMillis - previousMillisSleep >= intervalSleep) {
+    previousMillisSleep = currentMillis;
+    Going_To_Sleep();
+  }
+
+  if (2 == LOW) {
+    previousMillisSleep = currentMillis;
+}
